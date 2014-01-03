@@ -47,3 +47,47 @@ There are a number of options which can be passed to method.
 * `:grid` - your pricing grid (A,B,C,D,E - E is default)
 * `:duration` - the duration of the registration (a positive interger - 1 is default)
 
+## Contacts
+
+At the root of all domain registrations is a contact. Each contact has a unique `handle`
+which identifies the contact and is needed for all registrations.
+
+### Creating a new contact
+
+```ruby
+contact = Gandi::Contact.new
+contact.type            = 0
+contact.first_name      = 'Adam'
+contact.last_name       = 'Cooke'
+contact.address         = 'Unit 9 Winchester Place'
+contact.city            = 'Poole'
+contact.country         = 'GB'
+contact.email_address   = 'adam@example.com'
+contact.phone           = '+44.1202901101
+contact.password        = 'randompasswordhere'
+contact.save            #=> true
+contact.handle          #=> 'AC1234-GANDI'
+```
+
+If an error occurs here there are two possible exceptions which may be raised (as the
+same applies to updates). If a validation error is caught locally you will find a 
+`Gandi::ValidationError` is raised otherwise you'll receive `Gandi::DataError` with some
+mostly uninteligiable garbage from the Gandi API.
+
+### Finding a contact
+
+```ruby
+contact = Gandi::Contact.find('AC1234')
+contact.first_name      #=> 'Adam'
+```
+
+### Updating a contact
+
+To update a contact you need to find it and then make changes to its attributes followed
+by a save operation.
+
+```ruby
+contact = Gandi::Contact.find('AC1234')
+contact.phone = '+44.123451234'
+contact.save
+```
