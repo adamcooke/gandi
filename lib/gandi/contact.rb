@@ -173,5 +173,18 @@ module Gandi
       variable.nil? || variable.length == 0
     end
     
+    #
+    # Return whether this contact is suitable for use with a certain domain
+    #
+    def can_associate?(domain)
+      spec = {'domain' => domain, 'owner' => true, 'admin' => true}
+      res = Gandi.call('contact.can_associate_domain', self.handle, spec)
+      if res == true
+        true
+      else
+        res
+      end
+    end
+    
   end
 end
