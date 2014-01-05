@@ -188,5 +188,13 @@ module Gandi
       end
     end
     
+    #
+    # Return an array of domains associated with this contact
+    #
+    def domains
+      return [] if new_record?
+      Gandi.call('domain.list', {'handle' => self.handle}).map { |d| Domain.new(d, true)}
+    end
+    
   end
 end

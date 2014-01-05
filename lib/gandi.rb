@@ -3,6 +3,8 @@ require 'gandi/zlib_parser_decorator'
 require 'gandi/version'
 require 'gandi/price'
 require 'gandi/contact'
+require 'gandi/domain'
+require 'gandi/operation'
 
 module Gandi
     
