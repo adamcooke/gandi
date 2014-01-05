@@ -50,10 +50,12 @@ module Gandi
     # Find a contact based on it's handle
     #
     def self.find(handle)
-      info = Gandi.client.call("contact.info", Gandi.apikey, handle)
+      info = Gandi.call("contact.info", handle)
       contact = self.new
       contact.set_attributes(info)
       contact
+    rescue Gandi::DataError => e
+      e.message =~ /CAUSE_NOTFOUND/ ? nil : raise
     end
     
     #
