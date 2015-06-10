@@ -7,21 +7,29 @@ require 'gandi/domain'
 require 'gandi/operation'
 
 module Gandi
-    
+
     class Error < StandardError; end
     class DataError < Error; end
     class ServerError < Error; end
     class ValidationError < Error; end
-  
-  
+
+
   class << self
-    attr_accessor :apikey
-    attr_accessor :mode
-    
-    def endpoint
-      mode == 'live' ? 'https://rpc.gandi.net/xmlrpc/' : 'https://rpc.ote.gandi.net/xmlrpc/'
+    attr_writer :apikey
+    attr_writer :mode
+
+    def apikey
+      @apikey || ENV['GANDI_API_KEY']
     end
-    
+
+    def mode
+      @mode || ENV['GANDI_API_MODE']
+    end
+
+    def endpoint
+      self.mode == 'live' ? 'https://rpc.gandi.net/xmlrpc/' : 'https://rpc.ote.gandi.net/xmlrpc/'
+    end
+
     def client
       @client ||= begin
         XMLRPC::Config.module_eval do
@@ -34,9 +42,9 @@ module Gandi
         client
       end
     end
-    
+
     def call(name, *args)
-      client.call(name, apikey, *args)
+      client.call(name, self.apikey, *args)
     rescue XMLRPC::FaultException => e
       raise(e.faultCode < 500000 ? ServerError : DataError, e.faultString)
     end
